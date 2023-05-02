@@ -1,22 +1,31 @@
-size = 4 
-reference_string = [1, 2, 1, 0, 3, 0, 4, 2, 4]
-pages = []
-
-faults = 0
-hits = 0
-for i in reference_string:
-    if i in pages:
-        pages.remove(i)
-        
-        pages.append(i)
-        hits += 1
-    else:
-        faults +=1
-        if(len(pages) < size):
-            pages.append(i)
+from queue import Queue
+def pageFaults(pages, n, capacity):
+    s = set()
+    indexes = Queue()
+ 
+    # Start from initial page
+    page_faults = 0
+    for i in range(n):
+        if (len(s) < capacity):
+            if (pages[i] not in s):
+                s.add(pages[i])
+                page_faults += 1
+                indexes.put(pages[i])
         else:
-            pages.remove(pages[0])
-            
-            pages.append(i)
-print("Hits:", hits)
-print("Faults:", faults)
+            if (pages[i] not in s):
+                val = indexes.queue[0]
+ 
+                indexes.get()
+                s.remove(val)
+                s.add(pages[i])
+                indexes.put(pages[i])
+                page_faults += 1
+ 
+    return page_faults
+if __name__ == '__main__':
+    pages = [7, 0, 1, 2, 0, 3, 0,
+                4, 2, 3, 0, 3, 2]
+    n = len(pages)
+    capacity = 4
+    print(pageFaults(pages, n, capacity))
+ 
